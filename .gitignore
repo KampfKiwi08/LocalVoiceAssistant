@@ -1,0 +1,64 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# --- Virtual environments ---
+.venv/
+venv/
+env/
+
+# --- Secrets and local config ---
+.env
+.env.*
+config.local.json
+*.key
+*.pem
+
+# --- AI models (large files, download separately) ---
+models/
+*.gguf
+*.bin
+*.onnx
+*.onnx.json
+*.pt
+*.pth
+*.safetensors
+*.tflite
+*.ppn
+
+# --- Audio recordings and test output ---
+recordings/
+*.wav
+*.mp3
+*.flac
+*.ogg
+!tests/fixtures/*.wav
+
+# --- Logs ---
+*.log
+logs/
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+
+# --- Editors / IDEs ---
+.vscode/*
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.swp
+
+# --- OS files ---
+.DS_Store
+Thumbs.db
+desktop.ini
