@@ -10,8 +10,8 @@ Rule of thumb: get each stage working **alone** before connecting it to the next
 ## MVP Requirements (what "done" means)
 
 - [x] Captures audio from a microphone
-- [ ] Detects a wake word without sending audio anywhere
-- [ ] Records the user's request after the wake word and stops when they stop speaking
+- [x] Detects a wake word without sending audio anywhere
+- [x] Records the user's request after the wake word and stops when they stop speaking
 - [x] Transcribes speech to text locally (Whisper)
 - [x] Generates a reply with a local LLM
 - [x] Speaks the reply with a local TTS voice (Piper)
