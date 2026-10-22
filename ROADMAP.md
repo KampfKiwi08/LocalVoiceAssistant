@@ -15,7 +15,7 @@ Rule of thumb: get each stage working **alone** before connecting it to the next
 - [x] Transcribes speech to text locally (Whisper)
 - [x] Generates a reply with a local LLM
 - [x] Speaks the reply with a local TTS voice (Piper)
-- [ ] Runs as one continuous loop (wake -> listen -> think -> speak -> back to idle)
+- [x] Runs as one continuous loop (wake -> listen -> think -> speak -> back to idle)
 - [ ] Settings live in `config.json`, not hardcoded
 - [x] Works fully offline after models are downloaded
 - [ ] Setup is reproducible from the README (`pip install -r requirements.txt`)
