@@ -1,12 +1,13 @@
 import sounddevice as sd
-from stt import transcribe
+import numpy as np
 
 fs = 16000
-duration = 3  # seconds
+device_in = 1
+device_out = 10
 
-print("Recording...")
-myrecording = sd.rec(int(duration * fs), samplerate=fs, channels=1, dtype='float32')
-sd.wait()
 
-text = transcribe(myrecording)
-print(repr(text))   # shows '' if empty, so you can tell blank from nothing
+def record(seconds) -> np.ndarray:
+    recording = sd.rec(int(seconds * fs), samplerate=fs, channels=1, dtype='float32', device=device_in)
+    sd.wait()
+
+    return recording.flatten()

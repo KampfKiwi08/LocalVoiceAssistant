@@ -1,7 +1,7 @@
 import time
 import ollama
 
-MODEL = "llama3.2:1b"  # use "llama3.2:1b" to mimic Raspberry Pi speed
+MODEL = "llama3.2:3b"  # use "llama3.2:1b" to mimic Raspberry Pi speed
 
 SYSTEM_PROMPT = (
     "You are a voice assistant. Your answers are spoken out loud, so reply in "

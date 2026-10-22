@@ -119,11 +119,11 @@ python main.py
 
 The full build order is in [ROADMAP.md](ROADMAP.md). Short version:
 
-- [ ] Phase 0: Project setup
-- [ ] Phase 1: Audio in and out
-- [ ] Phase 2: Speech to text
-- [ ] Phase 3: Local language model
-- [ ] Phase 4: Text to speech
+- [x] Phase 0: Project setup
+- [x] Phase 1: Audio in and out
+- [x] Phase 2: Speech to text
+- [x] Phase 3: Local language model
+- [x] Phase 4: Text to speech
 - [ ] Phase 5: Connect the pipeline (push-to-talk)
 - [ ] Phase 6: Wake word (**MVP complete**)
 - [ ] Phase 7: Config, error handling, streaming

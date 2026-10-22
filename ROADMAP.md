@@ -9,15 +9,15 @@ Rule of thumb: get each stage working **alone** before connecting it to the next
 
 ## MVP Requirements (what "done" means)
 
-- [ ] Captures audio from a microphone
+- [x] Captures audio from a microphone
 - [ ] Detects a wake word without sending audio anywhere
 - [ ] Records the user's request after the wake word and stops when they stop speaking
-- [ ] Transcribes speech to text locally (Whisper)
-- [ ] Generates a reply with a local LLM
-- [ ] Speaks the reply with a local TTS voice (Piper)
+- [x] Transcribes speech to text locally (Whisper)
+- [x] Generates a reply with a local LLM
+- [x] Speaks the reply with a local TTS voice (Piper)
 - [ ] Runs as one continuous loop (wake -> listen -> think -> speak -> back to idle)
 - [ ] Settings live in `config.json`, not hardcoded
-- [ ] Works fully offline after models are downloaded
+- [x] Works fully offline after models are downloaded
 - [ ] Setup is reproducible from the README (`pip install -r requirements.txt`)
 
 Not part of the MVP (do later): noise cancellation, custom wake words, function calling and skills (weather, music), LEDs and display, web interface, Raspberry Pi hardware.
