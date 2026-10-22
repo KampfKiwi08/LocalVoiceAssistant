@@ -124,7 +124,7 @@ The full build order is in [ROADMAP.md](ROADMAP.md). Short version:
 - [x] Phase 2: Speech to text
 - [x] Phase 3: Local language model
 - [x] Phase 4: Text to speech
-- [ ] Phase 5: Connect the pipeline (push-to-talk)
+- [x] Phase 5: Connect the pipeline (push-to-talk)
 - [ ] Phase 6: Wake word (**MVP complete**)
 - [ ] Phase 7: Config, error handling, streaming
 - [ ] Later: noise cancellation, skills, Raspberry Pi port
