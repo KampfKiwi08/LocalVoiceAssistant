@@ -6,7 +6,7 @@ import audio
 try:
     while True:
         input("Press Enter and speak")
-        recording = audio.record(seconds=3)
+        recording = audio.record_until_silence()
         transcribed = stt.transcribe(recording)
         print("You: ", transcribed)
 
