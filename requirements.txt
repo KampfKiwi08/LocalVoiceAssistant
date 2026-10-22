@@ -27,3 +27,5 @@ truststore==0.10.4
 typing_extensions==4.16.0
 
 openwakeword
+ollama
+piper

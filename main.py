@@ -1,14 +1,15 @@
-import llm
-import tts
-import stt
-import wake
-import audio
+from modules import audio, wake, llm, tts, stt
 
 try:
     while True:
         wake.wait_for_wake_word()
-        audio.beep(volume=1)
+        audio.beep()
         recording = audio.record_until_silence()
+
+        if len(recording) == 0:
+            print("No speech heard")
+            continue
+
         transcribed = stt.transcribe(recording)
         print("You: '", transcribed, "'")
 

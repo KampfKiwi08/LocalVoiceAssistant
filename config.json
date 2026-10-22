@@ -1,0 +1,9 @@
+{
+  "audio": { "device_in": 1, "device_out": 10, "sample_rate": 16000, "input_gain": 3.0 },
+  "wake":  { "model": "hey_jarvis", "threshold": 0.4 },
+   "record": { "silence_threshold": 0.00003, "silence_seconds": 0.5, "max_seconds": 15, "start_timeout_seconds": 5 },
+  "stt":   { "model": "small.en", "beam_size": 1 },
+  "llm":   { "model": "llama3.2:3b", "max_tokens": 120, "system_prompt": "You are a voice assistant. Your answers are spoken out loud, so reply in one or two short sentences. Use plain words only: no lists, no markdown, no emojis, no special characters." },
+  "tts":   { "voice_model": "en_US-lessac-medium.onnx" },
+  "beep":  { "freq": 880, "duration": 0.15, "volume": 1 }
+}

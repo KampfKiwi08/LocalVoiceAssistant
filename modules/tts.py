@@ -1,11 +1,12 @@
 import numpy as np
 import sounddevice as sd
 from piper import PiperVoice
+from pathlib import Path
+from modules.config import cfg
 
-VOICE_PATH = "models/en_US-lessac-medium.onnx"
+VOICE_PATH = Path(__file__).resolve().parent.parent / "models" / cfg["tts"]["voice_model"]
 
 voice = PiperVoice.load(VOICE_PATH)
-
 
 def speak(text: str) -> None:
     """Turn text into speech with Piper and play it. Blocks until finished."""
