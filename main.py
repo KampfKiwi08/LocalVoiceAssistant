@@ -3,7 +3,6 @@ from modules import audio, wake, llm, tts, stt
 try:
     while True:
         wake.wait_for_wake_word()
-        audio.beep()
         recording = audio.record_until_silence()
 
         if len(recording) == 0:

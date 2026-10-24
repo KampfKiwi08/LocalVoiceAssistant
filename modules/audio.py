@@ -14,44 +14,62 @@ def record(seconds) -> np.ndarray:
 def record_until_silence() -> np.ndarray:
     """Record one spoken request.
 
-    Waits for speech to start, then stops after a pause. Returns an empty
-    array if nobody starts speaking within start_timeout_seconds. Never
-    records more than max_seconds of audio.
+    Waits for speech to start, then stops after a pause. Sounds shorter than
+    min_speech_seconds (clicks, echoes, the tail of the wake word) are
+    discarded and listening continues. Returns an empty array if nobody
+    speaks within start_timeout_seconds. Never records more than
+    max_seconds of audio.
     """
-    sr = cfg["audio"]["sample_rate"]
-    rec = cfg["record"]
-    max_silent_blocks = int(rec["silence_seconds"] * sr / BLOCK_SIZE)
-    max_blocks = int(rec["max_seconds"] * sr / BLOCK_SIZE)
-    start_timeout_blocks = int(rec["start_timeout_seconds"] * sr / BLOCK_SIZE)
+    sample_rate = cfg["audio"]["sample_rate"]
+    recording_config = cfg["record"]
+    max_silent_blocks = max(1, int(recording_config["silence_seconds"] * sample_rate / BLOCK_SIZE))
+    max_blocks = int(recording_config["max_seconds"] * sample_rate / BLOCK_SIZE)
+    max_start_timeout_blocks = int(recording_config["start_timeout_seconds"] * sample_rate / BLOCK_SIZE)
+    min_speech_blocks = int(recording_config["min_speech_seconds"] * sample_rate / BLOCK_SIZE)
 
     recording = []
     silent_blocks = 0   # consecutive quiet blocks after speech started
-    waited_blocks = 0   # blocks spent waiting for speech to start
+    start_timeout_blocks = 0 # counter for the start timeout
     speech_started = False
 
-    with sd.InputStream(samplerate=sr, channels=1, dtype='float32', device=cfg["audio"]["device_in"]) as stream:
+    with sd.InputStream(samplerate=sample_rate, channels=1, dtype='float32', device=cfg["audio"]["device_in"]) as stream:
         while True:
             block, overflowed = stream.read(BLOCK_SIZE)
-            rms = np.sqrt(np.mean(block ** 2))
-            is_silent = rms < rec["silence_threshold"]
-            print(f"{rms:.5f}", "quiet" if is_silent else "LOUD")
+            is_silent = np.sqrt(np.mean(block ** 2)) < recording_config["silence_threshold"]
 
             if speech_started:
                 recording.append(block)
-                silent_blocks = silent_blocks + 1 if is_silent else 0
+                if is_silent:
+                    silent_blocks += 1
+                else:
+                    silent_blocks = 0
 
-                if silent_blocks > max_silent_blocks:
-                    del recording[len(recording) - silent_blocks:]  # trim the trailing pause
+                if silent_blocks >= max_silent_blocks:
+                    speech_len = len(recording) - silent_blocks
+
+                    #discard any speach shorter than min_speech_blocks and reset
+                    if speech_len < min_speech_blocks:
+                        recording.clear()
+                        speech_started = False
+                        silent_blocks = 0
+                        continue
+
+                    del recording[-silent_blocks:]
                     break
-                if len(recording) >= max_blocks:  # maximum length reached
+
+                if len(recording) >= max_blocks:
                     break
-            elif not is_silent:
-                speech_started = True
-                recording.append(block)
+
             else:
-                waited_blocks += 1
-                if waited_blocks > start_timeout_blocks:  # nobody spoke
-                    return np.zeros(0, dtype=np.float32)
+                start_timeout_blocks += 1
+                if not is_silent:
+                    silent_blocks = 0
+                    speech_started = True
+                    recording.append(block)
+
+                if start_timeout_blocks >= max_start_timeout_blocks:
+                    return np.array([], dtype='float32')
+
 
     return np.concatenate(recording).flatten()
 
