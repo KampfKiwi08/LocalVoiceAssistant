@@ -1,4 +1,5 @@
-from modules import audio, wake, llm, tts, stt
+from modules import audio, wake, speaker, stt
+
 
 try:
     while True:
@@ -16,8 +17,9 @@ try:
             print("I didn't understand")
             continue
 
-        response = llm.ask(transcribed)
-        print("LLM: '", response, "'")
-        tts.speak(response)
+        full_response = speaker.speak_reply(transcribed)
+
+        print("AI: '", full_response, "'")
+
 except KeyboardInterrupt:
     print("\nBye")
