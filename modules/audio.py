@@ -5,8 +5,11 @@ from modules.config import cfg
 
 BLOCK_SIZE = 480  # samples per read: 30 ms at 16 kHz
 
+sd.default.device = cfg["audio"]["device_in"], cfg["audio"]["device_out"]
+
+
 def record(seconds) -> np.ndarray:
-    recording = sd.rec(int(seconds * cfg["audio"]["sample_rate"]), samplerate=cfg["audio"]["sample_rate"], channels=1, dtype='float32', device=cfg["audio"]["device_in"])
+    recording = sd.rec(int(seconds * cfg["audio"]["sample_rate"]), samplerate=cfg["audio"]["sample_rate"], channels=1, dtype='float32')
     sd.wait()
 
     return recording.flatten()
@@ -32,7 +35,7 @@ def record_until_silence() -> np.ndarray:
     start_timeout_blocks = 0 # counter for the start timeout
     speech_started = False
 
-    with sd.InputStream(samplerate=sample_rate, channels=1, dtype='float32', device=cfg["audio"]["device_in"]) as stream:
+    with sd.InputStream(samplerate=sample_rate, channels=1, dtype='float32') as stream:
         while True:
             block, overflowed = stream.read(BLOCK_SIZE)
             is_silent = np.sqrt(np.mean(block ** 2)) < recording_config["silence_threshold"]

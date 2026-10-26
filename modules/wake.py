@@ -7,7 +7,7 @@ from modules.config import cfg
 model = openwakeword.Model(wakeword_models=[cfg["wake"]["model"]], inference_framework="onnx")
 
 def wait_for_wake_word():
-    stream = sd.InputStream(samplerate=16000, channels=1, dtype="int16", blocksize=1280, device=cfg["audio"]["device_in"])
+    stream = sd.InputStream(samplerate=cfg["audio"]["samplerate"], channels=1, dtype="int16", blocksize=1280, device=cfg["audio"]["device_in"])
 
     with stream:
         while True:

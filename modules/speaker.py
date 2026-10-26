@@ -1,6 +1,6 @@
 ﻿import threading
 from queue import Queue
-from modules import llm, tts
+from modules import llm, tts, debug
 
 
 def speak_reply(transcribed: str) -> str:
@@ -13,11 +13,13 @@ def speak_reply(transcribed: str) -> str:
     try:
         for sentence in llm.ask_stream(transcribed):
             response_queue.put(sentence)
+            debug.milestone("First sentence from LLM")
             full_response = full_response + sentence + " "
     finally:
         response_queue.put(None)
+        speaker_thread.join()
+        debug.milestone("reply complete")
 
-    speaker_thread.join()
 
     return full_response.strip()
 def speak_sentence(sentence_queue: Queue):
