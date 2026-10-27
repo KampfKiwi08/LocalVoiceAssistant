@@ -59,34 +59,34 @@ Setup, audio in and out, speech to text, local language model, text to speech, c
 
 ### Phase 8: Skill layer (core)
 
-26. **Conversation memory.** Keep the last few turns (limited to a small number so replies stay fast), reset after a few minutes of silence. Needed for follow-ups like "and in the kitchen?".
-27. **Tool-calling loop with one built-in tool.** Add `get_time` directly inside the project to learn how Ollama's tool calls work: send the tools, detect a tool call, run it, return the result, stream the final answer. Limit the number of rounds, and handle unknown tools, bad arguments and errors by returning a short error text to the model.
+- [x] 26. **Conversation memory.** Keeps the last few turns (`memory_turns`), forgets after `memory_timeout_seconds` of silence, kept in RAM only. Needed for follow-ups like "and in the kitchen?".
+- [ ] 27. **Tool-calling loop with one built-in tool.** Add `get_time` directly inside the project to learn how Ollama's tool calls work: send the tools, detect a tool call, run it, return the result, stream the final answer. Limit the number of rounds, and handle unknown tools, bad arguments and errors by returning a short error text to the model. Decide what goes into the conversation memory for tool turns (suggestion: only the final question and answer, not the tool messages).
     - Milestone: "What time is it?" is answered from the real clock.
-28. **Test phrase list.** About 30 phrases with the expected tool call (and phrases that must *not* trigger a tool). Run it whenever the model or the prompt changes, and write down the accuracy. Try other small models that support tools.
-29. **Define the skill format.** Manifest fields, how a skill declares its tools, how it receives its settings, how it reports problems to the startup checks. Write it down in `SKILLS.md`.
-30. **Skill loader (`modules/skills.py`).** Scan `skills/`, read manifests, load only enabled skills, collect their tools, detect duplicate tool names, give each skill its settings. Add the skill checks to the startup checks.
-31. **Move `get_time` into its own repository** (`LocalVoiceAssistant-skill-time`) and load it through the loader.
+- [ ] 28. **Test phrase list.** About 30 phrases with the expected tool call (and phrases that must *not* trigger a tool). Run it whenever the model or the prompt changes, and write down the accuracy. Try other small models that support tools.
+- [ ] 29. **Define the skill format.** Manifest fields, how a skill declares its tools, how it receives its settings, how it reports problems to the startup checks. Write it down in `SKILLS.md`.
+- [ ] 30. **Skill loader (`modules/skills.py`).** Scan `skills/`, read manifests, load only enabled skills, collect their tools, detect duplicate tool names, give each skill its settings. Add the skill checks to the startup checks.
+- [ ] 31. **Move `get_time` into its own repository** (`LocalVoiceAssistant-skill-time`) and load it through the loader.
     - Milestone: the assistant gets a new ability by cloning a repo and adding one line to the config.
-32. **Skill template repository** with the manifest, an example tool, a test and a README, so anyone can start a new skill.
-33. **Timing for tool turns.** Add milestones for "tool call received" and "tool finished" to the debug output.
-34. **Optional router for trivial requests** (time, date) that skips the model entirely, if tool turns turn out to be too slow, especially on the Pi.
+- [ ] 32. **Skill template repository** with the manifest, an example tool, a test and a README, so anyone can start a new skill.
+- [ ] 33. **Timing for tool turns.** Add milestones for "tool call received" and "tool finished" to the debug output.
+- [ ] 34. **Optional router for trivial requests** (time, date) that skips the model entirely, if tool turns turn out to be too slow, especially on the Pi.
 
 ### Phase 9: Home Assistant skill (own repository)
 
-35. **Connection.** Base URL and token from the environment or a secrets file. Startup check: Home Assistant is reachable and the token works.
-36. **Read-only first.** A tool to read the state of an allowlisted entity ("how warm is it in the bedroom?").
-37. **Allowlist file.** Which entities can be used, with spoken names, aliases and areas. Only these names are shown to the model. Start with a handful of entities.
-38. **Control tools, domain by domain**, testing each before the next:
+- [ ] 35. **Connection.** Base URL and token from the environment or a secrets file. Startup check: Home Assistant is reachable and the token works.
+- [ ] 36. **Read-only first.** A tool to read the state of an allowlisted entity ("how warm is it in the bedroom?").
+- [ ] 37. **Allowlist file.** Which entities can be used, with spoken names, aliases and areas. Only these names are shown to the model. Start with a handful of entities.
+- [ ] 38. **Control tools, domain by domain**, testing each before the next:
     - [ ] lights (on/off, brightness, color, color temperature)
     - [ ] switches and fans
     - [ ] climate (temperature, mode)
     - [ ] covers (blinds, shutters)
     - [ ] media players (play, pause, volume)
     - [ ] scenes and scripts
-39. **Argument validation.** Unknown names, out-of-range values and domains that do not match the action are rejected with a short, speakable error.
-40. **Sensitive domains** (locks, alarms, garage doors): disabled by default. When enabled, require a spoken confirmation before acting.
-41. **Action log.** Record every executed action with the transcript that caused it.
-42. **Test phrases for the home** added to the phrase list, including ambiguous and dangerous ones that must be refused or confirmed.
+- [ ] 39. **Argument validation.** Unknown names, out-of-range values and domains that do not match the action are rejected with a short, speakable error.
+- [ ] 40. **Sensitive domains** (locks, alarms, garage doors): disabled by default. When enabled, require a spoken confirmation before acting.
+- [ ] 41. **Action log.** Record every executed action with the transcript that caused it.
+- [ ] 42. **Test phrases for the home** added to the phrase list, including ambiguous and dangerous ones that must be refused or confirmed.
 
 ### Phase 10: More skills (each its own repository)
 

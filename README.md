@@ -77,10 +77,10 @@ The model only *chooses* a tool and its arguments. The actual work happens in pl
 - Single config file for all settings
 - Startup checks with clear messages (config, voice files, audio devices, Ollama)
 - Model warm-up at startup, so the first question is not slower than the rest
+- Conversation memory: remembers the last few turns and forgets after a pause (kept in RAM only, never written to disk)
 - Optional timing output to find out where the time goes
 
 **In development: the skill layer**
-- Conversation memory
 - Tool calling in the LLM loop
 - A skill loader and a documented skill format
 - Skills, each in its own repository: time, Home Assistant, weather, and more
@@ -136,7 +136,7 @@ Everything is set in `config.json`:
 | `wake` | Wake word model and detection threshold |
 | `record` | Silence detection, maximum length of a request, start timeout |
 | `stt` | Whisper model and beam size |
-| `llm` | Ollama model, reply length limit, system prompt, how long the model stays loaded (`keep_alive`) |
+| `llm` | Ollama model, reply length limit, system prompt, how long the model stays loaded (`keep_alive`), conversation memory (`memory_turns`: how many question-and-answer pairs to remember, `memory_timeout_seconds`: forget after this much silence) |
 | `tts` | Piper voice file |
 | `beep` | The sound played after the wake word |
 | `debug` | `timings`: print how long each stage takes (optional) |
@@ -248,7 +248,7 @@ The full build order is in [ROADMAP.md](ROADMAP.md). Short version:
 
 - [x] Phase 0 to 6: Setup, audio, speech to text, LLM, text to speech, pipeline, wake word (**MVP complete**)
 - [x] Phase 7: Config, error handling, startup checks, streaming, warm-up, timing
-- [ ] Phase 8: Skill layer (conversation memory, tool calling, skill loader)
+- [ ] Phase 8: Skill layer (conversation memory is done; tool calling and the skill loader are next)
 - [ ] Phase 9: Home Assistant skill
 - [ ] Phase 10: More skills (weather, timers, ...)
 - [ ] Later: noise cancellation, custom wake word, Raspberry Pi port

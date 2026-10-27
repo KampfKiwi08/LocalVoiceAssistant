@@ -10,7 +10,7 @@ REQUIRED_CONFIG = {
     "wake" : ["model", "threshold"],
     "record" : ["silence_threshold", "silence_seconds", "max_seconds", "start_timeout_seconds", "min_speech_seconds"],
     "stt" : ["model", "beam_size"],
-    "llm" : ["model", "max_tokens", "system_prompt", "keep_alive"],
+    "llm" : ["model", "max_tokens", "system_prompt", "keep_alive", "memory_turns", "memory_timeout_seconds"],
     "tts" : ["voice_model"],
     "beep": ["freq", "duration", "volume"]
 }

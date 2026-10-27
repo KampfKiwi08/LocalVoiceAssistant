@@ -23,7 +23,7 @@ def record_until_silence() -> np.ndarray:
     speaks within start_timeout_seconds. Never records more than
     max_seconds of audio.
     """
-    sample_rate = cfg["audio"]["sample_rate"]
+    sample_rate = cfg["audio"]["samplerate"]
     recording_config = cfg["record"]
     max_silent_blocks = max(1, int(recording_config["silence_seconds"] * sample_rate / BLOCK_SIZE))
     max_blocks = int(recording_config["max_seconds"] * sample_rate / BLOCK_SIZE)
@@ -77,13 +77,13 @@ def record_until_silence() -> np.ndarray:
     return np.concatenate(recording).flatten()
 
 def beep(freq=cfg["beep"]["freq"], duration=cfg["beep"]["duration"], volume=cfg["beep"]["volume"]):
-    t = np.linspace(0, duration, int(cfg["audio"]["sample_rate"] * duration), endpoint=False)
+    t = np.linspace(0, duration, int(cfg["audio"]["samplerate"] * duration), endpoint=False)
     tone = np.sin(2 * np.pi * freq * t)
 
     # short fade in/out so it doesn't click
-    fade = int(cfg["audio"]["sample_rate"] * 0.01)
+    fade = int(cfg["audio"]["samplerate"] * 0.01)
     tone[:fade] *= np.linspace(0, 1, fade)
     tone[-fade:] *= np.linspace(1, 0, fade)
 
-    sd.play((tone * volume).astype(np.float32), samplerate=cfg["audio"]["sample_rate"])
+    sd.play((tone * volume).astype(np.float32), samplerate=cfg["audio"]["samplerate"])
     sd.wait()

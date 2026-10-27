@@ -1,28 +1,30 @@
 import re
+import time
+
 import ollama
 
 from modules import debug
 from modules.config import cfg
 
-def ask(prompt: str) -> str:
-    """Send one text prompt to the local LLM and return the reply as text."""
-    response = ollama.chat(
-        model=cfg["llm"]["model"],
-        messages=[
-            {"role": "system", "content": cfg["llm"]["system_prompt"]},
-            {"role": "user", "content": prompt},
-        ],
-        options={"num_predict": cfg["llm"]["max_tokens"]},  # hard cap on reply length (in tokens)
-    )
-    return response["message"]["content"].strip()
+chat_history = []
+time_since_last_interaction = None
+
 
 def ask_stream(prompt: str):
     """Send one text prompt to the local LLM and yield each sentence."""
+    global time_since_last_interaction
+    full_response = ""
     current_sentence = ""
+
+    if time_since_last_interaction is not None and time.monotonic() - time_since_last_interaction > cfg["llm"]["memory_timeout_seconds"]:
+        chat_history.clear()
+
+
     response = ollama.chat(
         model=cfg["llm"]["model"],
         messages=[
             {"role": "system", "content": cfg["llm"]["system_prompt"]},
+            *chat_history,
             {"role": "user", "content": prompt},
         ],
         options={"num_predict": cfg["llm"]["max_tokens"]},  # hard cap on reply length (in tokens)
@@ -30,11 +32,14 @@ def ask_stream(prompt: str):
         stream=True
     )
     for streamChunk in response:
+
         current_sentence += streamChunk['message']['content']
+        full_response += streamChunk['message']['content']
 
         while re.search(r"[.!?]\s", current_sentence):
             sentence_end = re.search(r"[.!?]\s", current_sentence).end()
             yield current_sentence[0:sentence_end].strip()
+
             current_sentence = current_sentence[sentence_end:]
         if streamChunk.get('done'):
             #Debug Ollama statistics
@@ -47,6 +52,13 @@ def ask_stream(prompt: str):
             debug.info("Ollama", "load " + str(load_time) + "s, " + "prompt " + str(prompt_time) + "s, " + str(token_speed) + " tokens/s")
     if current_sentence.strip() != "":
         yield current_sentence.strip()
+
+    if full_response.strip() != "":
+        chat_history.append({"role":"user", "content": prompt})
+        chat_history.append({"role":"assistant", "content": full_response.strip()})
+
+    chat_history[:] = chat_history[-cfg["llm"]["memory_turns"] * 2:]
+    time_since_last_interaction = time.monotonic()
 
 
 def warm_up():
