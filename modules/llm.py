@@ -62,7 +62,7 @@ def ask_stream(prompt: str):
 
 
 def warm_up():
-    response = ollama.chat(
+    ollama.chat(
         model=cfg["llm"]["model"],
         messages=[
             {"role": "system", "content": cfg["llm"]["system_prompt"]},
